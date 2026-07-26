@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AuraGesture is an advanced, real-time hand gesture recognition system utilizing machine learning to enable intuitive human-computer interaction and gesture-based media control.">
+    <title>AuraGesture - Premium Hand Gesture Recognition & Control System</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <!-- Main Background Elements for Visual Depth -->
+    <div class="bg-blur-circle primary-blur"></div>
+    <div class="bg-blur-circle secondary-blur"></div>
+    
+    <div class="app-container">
+        <!-- Main Sidebar (Webcam Feed and Real-Time Output) -->
+        <aside class="sidebar-panel glass-card">
+            <header class="app-header">
+                <div class="logo-wrapper">
+                    <span class="logo-icon">✨</span>
+                    <h1 id="app-title">AURA<span>GESTURE</span></h1>
+                </div>
+                <p class="tagline">Next-Gen Human-Computer Interaction</p>
+            </header>
+
+            <section class="camera-section">
+                <div class="camera-card">
+                    <div class="video-container">
+                        <video id="webcam-feed" autoplay playsinline muted></video>
+                        <canvas id="capture-canvas" style="display: none;"></canvas>
+                        
+                        <!-- Prediction Overlay -->
+                        <div id="gesture-overlay" class="overlay-idle">
+                            <div class="prediction-glow"></div>
+                            <div class="prediction-info">
+                                <span class="label-header">Recognized Gesture</span>
+                                <span id="overlay-gesture-value" class="gesture-value">None</span>
+                                <span id="overlay-confidence-value" class="confidence-value">Confidence: 0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Video Loader/Fallback -->
+                        <div id="camera-fallback" class="camera-fallback-screen">
+                            <span class="camera-fallback-icon">📷</span>
+                            <p>Camera is currently inactive</p>
+                            <button id="btn-start-camera" class="btn btn-primary">Start Webcam</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="camera-controls">
+                    <div class="control-row">
+                        <button id="btn-toggle-prediction" class="btn btn-secondary" disabled>
+                            <span class="btn-icon">▶</span> <span id="btn-prediction-text">Enable Detection</span>
+                        </button>
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="fps-slider">Scan Interval (FPS)</label>
+                            <span id="fps-value">5 Hz</span>
+                        </div>
+                        <input type="range" id="fps-slider" min="1" max="15" value="5" step="1">
+                    </div>
+                </div>
+            </section>
+
+            <section class="status-panel">
+                <div class="status-indicator">
+                    <div id="system-status-dot" class="dot dot-yellow"></div>
+                    <span id="system-status-text">Server Connecting...</span>
+                </div>
+                <div class="latency-display">
+                    <span>Inference Speed:</span>
+                    <span id="system-latency" class="latency-value">- ms</span>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Main Dashboard Content Area -->
+        <main class="main-dashboard">
+            <!-- Tabs Navigation -->
+            <nav class="dashboard-tabs glass-card" aria-label="Dashboard views">
+                <button id="tab-simulator" class="tab-btn active" data-tab="simulator-view">
+                    <span class="tab-icon">🎮</span> Control Simulator
+                </button>
+                <button id="tab-analytics" class="tab-btn" data-tab="analytics-view">
+                    <span class="tab-icon">📊</span> Model Insights
+                </button>
+                <button id="tab-tester" class="tab-btn" data-tab="tester-view">
+                    <span class="tab-icon">📤</span> File Tester
+                </button>
+            </nav>
+
+            <!-- Tab Panels -->
+            <div class="tab-content-container">
+                <!-- 1. Gesture Control Simulator View -->
+                <section id="simulator-view" class="tab-panel active">
+                    <div class="simulator-layout">
+                        <!-- Gesture Guide Bar -->
+                        <div class="glass-card gesture-bar">
+                            <h2 class="section-title">Gesture Mapping Reference</h2>
+                            <div class="gesture-grid">
+                                <div class="gesture-card-ref" data-gesture="Palm">
+                                    <div class="gesture-icon">✋</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">Palm</div>
+                                        <div class="gesture-action">Play / Pause</div>
+                                    </div>
+                                </div>
+                                <div class="gesture-card-ref" data-gesture="Fist">
+                                    <div class="gesture-icon">✊</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">Fist</div>
+                                        <div class="gesture-action">Mute / Unmute</div>
+                                    </div>
+                                </div>
+                                <div class="gesture-card-ref" data-gesture="Thumbs Up">
+                                    <div class="gesture-icon">👍</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">Thumbs Up</div>
+                                        <div class="gesture-action">Volume Up / Like</div>
+                                    </div>
+                                </div>
+                                <div class="gesture-card-ref" data-gesture="Thumbs Down">
+                                    <div class="gesture-icon">👎</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">Thumbs Down</div>
+                                        <div class="gesture-action">Volume Down</div>
+                                    </div>
+                                </div>
+                                <div class="gesture-card-ref" data-gesture="Index Right">
+                                    <div class="gesture-icon">👉</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">Index Right</div>
+                                        <div class="gesture-action">Next Slide</div>
+                                    </div>
+                                </div>
+                                <div class="gesture-card-ref" data-gesture="Index Left">
+                                    <div class="gesture-icon">👈</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">Index Left</div>
+                                        <div class="gesture-action">Prev Slide</div>
+                                    </div>
+                                </div>
+                                <div class="gesture-card-ref" data-gesture="No Gesture">
+                                    <div class="gesture-icon">🚫</div>
+                                    <div class="gesture-info-ref">
+                                        <div class="gesture-name">No Gesture</div>
+                                        <div class="gesture-action">Idle</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="simulator-row">
+                            <!-- Video Control Sandbox -->
+                            <div class="glass-card simulator-card flex-2">
+                                <div class="sim-header">
+                                    <h3>📺 Interactive Media Player</h3>
+                                    <span id="video-state-badge" class="action-badge">Stopped</span>
+                                </div>
+                                <div class="video-player-wrapper">
+                                    <video id="sim-video" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" loop muted playsinline></video>
+                                    <div class="video-overlay-feedback" id="video-feedback"></div>
+                                    <!-- Controls Custom Display -->
+                                    <div class="player-custom-controls">
+                                        <div class="volume-bar-wrapper">
+                                            <span>🔊</span>
+                                            <div class="vol-track">
+                                                <div id="vol-level" style="width: 50%;"></div>
+                                            </div>
+                                            <span id="vol-text">50%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-tip">
+                                    <strong>Controls:</strong> Try mimicking ✋ <strong>Palm</strong> to Play/Pause, ✊ <strong>Fist</strong> to Mute/Unmute, and 👍/👎 <strong>Thumbs</strong> to adjust volume!
+                                </div>
+                            </div>
+
+                            <!-- Carousel Slideshow Sandbox -->
+                            <div class="glass-card simulator-card flex-1">
+                                <div class="sim-header">
+                                    <h3>🖼️ Presentations / Slides</h3>
+                                    <span id="slide-state-badge" class="action-badge">Slide 1/3</span>
+                                </div>
+                                <div class="carousel-wrapper">
+                                    <div class="carousel-track" id="carousel-track">
+                                        <div class="slide active-slide" style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <div class="slide-content">
+                                                <h4>Welcome to AuraGesture</h4>
+                                                <p>Controlling software with hand motions</p>
+                                            </div>
+                                        </div>
+                                        <div class="slide" style="background-image: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #333;">
+                                            <div class="slide-content">
+                                                <h4>Machine Learning Model</h4>
+                                                <p>Support Vector Machines (SVM) classifying landmarks & shapes</p>
+                                            </div>
+                                        </div>
+                                        <div class="slide" style="background-image: linear-gradient(135deg, #13547a 0%, #80d0c7 100%);">
+                                            <div class="slide-content">
+                                                <h4>Intuitive UX Designs</h4>
+                                                <p>Enabling accessible human-computer interfaces</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-controls-hint">
+                                        <span id="btn-slide-prev" class="carousel-hint-btn">👈 Prev</span>
+                                        <div class="carousel-dots" id="carousel-dots">
+                                            <span class="dot active"></span>
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                        </div>
+                                        <span id="btn-slide-next" class="carousel-hint-btn">Next 👉</span>
+                                    </div>
+                                </div>
+                                <div class="card-tip">
+                                    <strong>Controls:</strong> Point 👉 <strong>Index Right</strong> to go next, or 👈 <strong>Index Left</strong> to go back!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Model Insights and Performance View -->
+                <section id="analytics-view" class="tab-panel">
+                    <div class="analytics-layout">
+                        <!-- Left Stats Panel -->
+                        <div class="glass-card stats-overview">
+                            <h2 class="section-title">Model Performance Overview</h2>
+                            <div class="metrics-grid">
+                                <div class="metric-box">
+                                    <span class="metric-label">Best Classifier</span>
+                                    <span id="metric-model-name" class="metric-number">SVM (RBF)</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-label">Validation Accuracy</span>
+                                    <span id="metric-accuracy" class="metric-number">100.0%</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-label">Train Time</span>
+                                    <span id="metric-train-time" class="metric-number">0.00s</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-label">Inference Latency</span>
+                                    <span id="metric-inference-time" class="metric-number">0.00ms</span>
+                                </div>
+                            </div>
+
+                            <h3 class="subsection-title">Model Benchmarks</h3>
+                            <div class="table-wrapper">
+                                <table class="sleek-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Model Type</th>
+                                            <th>Test Accuracy</th>
+                                            <th>Train Time</th>
+                                            <th>Inference speed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="models-table-body">
+                                        <tr>
+                                            <td>SVM (RBF)</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Random Forest</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MLP Classifier</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right Confusion Matrix Panel -->
+                        <div class="glass-card confusion-matrix-card">
+                            <h2 class="section-title">Confusion Matrix Heatmap</h2>
+                            <div class="matrix-image-container">
+                                <img id="img-confusion-matrix" src="confusion_matrix.png" alt="Confusion Matrix plot generated during training">
+                            </div>
+                            <p class="matrix-caption">The confusion matrix showing predictions vs true targets across all 7 gestures on the 20% test split.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Drag and Drop File Tester View -->
+                <section id="tester-view" class="tab-panel">
+                    <div class="tester-layout">
+                        <div class="glass-card file-uploader-card">
+                            <h2 class="section-title">Upload & Classify Gesture Images</h2>
+                            <p class="section-desc">Drag and drop a hand gesture image to run instant classification using the trained Support Vector Machine model.</p>
+                            
+                            <div class="drop-zone" id="upload-drop-zone">
+                                <div class="drop-zone-content">
+                                    <span class="upload-icon">📤</span>
+                                    <p class="drop-text">Drag and drop your image here, or <span>browse files</span></p>
+                                    <p class="drop-limit">Supports JPG, JPEG, PNG (Automatically converts to 120x120 Grayscale)</p>
+                                </div>
+                                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                            </div>
+
+                            <div class="preview-result-container" id="tester-results-area" style="display: none;">
+                                <div class="preview-box glass-card">
+                                    <h4>Uploaded Image</h4>
+                                    <div class="image-preview-frame">
+                                        <img id="img-test-preview" src="" alt="Test image preview">
+                                    </div>
+                                </div>
+
+                                <div class="result-details-box glass-card">
+                                    <h4>Classification Analysis</h4>
+                                    <div class="prediction-large-badge">
+                                        <span class="pred-label-heading">PREDICTED GESTURE</span>
+                                        <span id="tester-pred-label" class="pred-label-val">-</span>
+                                        <span id="tester-pred-conf" class="pred-conf-val">Confidence: -%</span>
+                                    </div>
+                                    
+                                    <div class="probability-bars" id="tester-probabilities">
+                                        <!-- Probability bars will be dynamically rendered here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script loading -->
+    <script src="app.js"></script>
+</body>
+</html>
