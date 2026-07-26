@@ -1,0 +1,86 @@
+{
+    "best_model": "SVM (RBF)",
+    "accuracy": 1.0,
+    "train_time_sec": 32.30585217475891,
+    "inference_time_ms": 13.686842152050563,
+    "dataset_summary": {
+        "train_size": 448,
+        "test_size": 112,
+        "num_classes": 7
+    },
+    "models_comparison": {
+        "SVM (RBF)": {
+            "accuracy": 1.0,
+            "train_time_sec": 32.30585217475891,
+            "inference_time_ms": 13.686842152050563
+        },
+        "Random Forest": {
+            "accuracy": 1.0,
+            "train_time_sec": 0.9686238765716553,
+            "inference_time_ms": 0.322810241154262
+        },
+        "Multi-Layer Perceptron": {
+            "accuracy": 1.0,
+            "train_time_sec": 32.19826865196228,
+            "inference_time_ms": 0.0860201460974557
+        }
+    },
+    "classification_report": {
+        "Palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "Fist": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "Thumbs Up": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "Thumbs Down": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "Index Right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "Index Left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "No Gesture": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 16.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+        },
+        "weighted avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+        }
+    },
+    "trained_at": "2026-06-13 14:46:28"
+}
